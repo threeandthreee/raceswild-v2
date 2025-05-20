@@ -15,8 +15,11 @@ div
             span(v-else) {{formatSegmentTime(time.segment_time, data.segments.find(it => it.id == layout).timing_type)}}
     v-divider
   div(v-if="layout.type == 'segment_block'")
-    .text-h4.mb-2 {{layout.title}}
-    div(v-for="segment in layout.segments")
+    v-card(variant="text" @click="toggleCollapse")
+      .text-h4.ma-2 {{layout.title}}
+        v-icon(v-if="collapsed") mdi-chevron-up
+        v-icon(v-else) mdi-chevron-down
+    div(v-if="!collapsed" v-for="segment in layout.segments")
       leaderboard-segments.ml-4(:layout="segment" :data="data")
   div(v-if="layout.type == 'blurb'")
     .markdown.mb-2(v-html="marked(layout.contents)")
@@ -26,5 +29,9 @@ div
 import { marked } from 'marked'
 import { formatSegmentTime, formatTimestamp } from '@/utils/formatting'
 import LeaderboardSegments from '@/components/LeaderboardSegments.vue'
+import { ref } from 'vue'
 defineProps(['layout', 'data'])
+
+const collapsed = ref(false)
+const toggleCollapse = () => { collapsed.value = !collapsed.value }
 </script>

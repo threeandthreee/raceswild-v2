@@ -30,6 +30,7 @@ router.get('/players', asyncRoute(async (req, res) => {
       knex.raw(`COUNT(CASE WHEN participation_level IN ('won', 'raced') THEN 1 END) AS races`),
       knex.raw(`COUNT(CASE WHEN participation_level = 'won' THEN 1 END) AS wins`)
     )
+    .orderBy('participations', 'desc')
 
   res.json(players)
 }))

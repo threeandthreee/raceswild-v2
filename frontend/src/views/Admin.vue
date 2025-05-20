@@ -1,9 +1,8 @@
 <template lang="pug">
 v-container
   .d-flex.align-center.justify-space-between
-    v-breadcrumbs(:items="breadcrumbs" divider=">")
-    login-status(:ready="ready" :data="login")
-  v-divider.mb-4
+    breadcrumbs(:items="breadcrumbItems" :loading="!ready")
+      login-status(:ready="ready" :data="login")
   div(v-if="ready && login && login.player")
     div(v-if="!login.player.is_admin")
       p Admins only!
@@ -404,11 +403,11 @@ v-container
 import { ref, onMounted, computed } from 'vue'
 import { marked } from 'marked'
 import api from '@/utils/axios'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import LoginStatus from '@/components/LoginStatus'
 
-const breadcrumbs = [
-  { title: "Races Wild", href:"/", disabled:false },
-  { title: "Admin", disabled: true }
+const breadcrumbItems = [
+  { label: "Admin" }
 ]
 
 const ready = ref(false)
@@ -573,9 +572,10 @@ const deleteParticipant = async () => {
 
 // players
 const playerHeaders = [
+  { title: "", value: "avatar_url" },
   { title: "username", value: "username", sortable: true },
-  { title: "short", value: "short", sortable: true },
-  { title: "avatar", value: "avatar_url" }
+  //{ title: "short", value: "short", sortable: true },
+  { title: "participations", value: "participations", sortable: true }
 ]
 const addPlayerUsername = ref("")
 const editPlayerData = ref({})
