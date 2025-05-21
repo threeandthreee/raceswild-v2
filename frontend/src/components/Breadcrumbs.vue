@@ -7,7 +7,7 @@
         variant="text"
         color="primary"
         size="large"
-      ) Races Wild
+      ) {{raceswild}}
       .d-flex.justify-start.align-center.flex-wrap(
         v-for="item in items"
       )
@@ -31,7 +31,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useDisplay } from 'vuetify'
 defineProps(['items', 'loading'])
+
+const { smAndDown } = useDisplay()
+const raceswild = computed(() => smAndDown.value ? 'RW' : 'Races Wild' )
 </script>
 
 <style>

@@ -4,8 +4,8 @@ v-container
     breadcrumbs(:items="breadcrumbItems" :loading="loading")
   div(v-if="!loading")
     div(v-if="event.id")
-      .text-h2 {{event.title}}
-      .text-h4 {{dateStr}}
+      .text-h3.text-sm.h2 {{event.title}}
+      .text-h5.text-sm.h4 {{dateStr}}
       p todo vod, participants, details
     div(v-else) not found
 </template>

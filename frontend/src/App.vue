@@ -16,4 +16,7 @@ v-app
 .w-100 {
   width: 100%;
 }
+a {
+  color: #1976D2;
+}
 </style>

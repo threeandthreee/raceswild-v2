@@ -2,8 +2,8 @@
 v-container(style="max-width:600px")
   .text-overline Next Up
   v-card(v-if="data.upcoming && data.upcoming.length" variant="text" :to="getEventPath(data.upcoming[0])")
-    .text-h2 {{data.upcoming[0].title}}
-    .text-h4 {{data.dateStr}}
+    .text-h3.text-sm-h2 {{data.upcoming[0].title}}
+    .text-h5.text-sm-h4 {{data.dateStr}}
   .d-flex.flex-column.mt-8
     v-btn.my-2.twitch-btn(dark depressed size="x-large" href="https://twitch.tv/acebreakerultra")
       v-icon.mr-2(size="x-large") mdi-twitch
@@ -18,7 +18,7 @@ v-container(style="max-width:600px")
       v-icon.mr-2(size="x-large") mdi-calendar
       | ICS Calendar
   v-divider.mt-8
-  .d-flex.justify-space-between
+  .d-flex.justify-space-between.flex-column.flex-sm-row.align-center
     v-btn(size="x-large" variant="text" width="33%" color="primary" to="/archive") Archive
     v-divider(vertical)
     v-btn(size="x-large" variant="text" width="33%" color="primary" to="/leaderboard") Leaderboard

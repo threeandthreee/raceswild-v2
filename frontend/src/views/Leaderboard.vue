@@ -53,12 +53,14 @@ import { formatSegmentTime, formatTimestamp } from '@/utils/formatting'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import LeaderboardSegments from '@/components/LeaderboardSegments.vue'
 import LoginStatus from '@/components/LoginStatus.vue'
+import { useDisplay } from 'vuetify'
 
+const { smAndUp } = useDisplay()
 const route = useRoute()
 const slug = route.params.slug
 
 const breadcrumbItems = [
-  { label: "Leaderboard", url: "/leaderboard" },
+  { label: smAndUp ? "Leaderboard" : "LB", url: "/leaderboard" },
   { label: slug }
 ]
 
