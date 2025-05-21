@@ -67,7 +67,12 @@ router.get('/auth', asyncRoute(async (req, res) => {
       .onConflict('player_id')
       .merge({ access_token, refresh_token, expires_at: expiry })
 
-    res.cookie('session', sessionId, { httpOnly: true, sameSite: 'Lax' })
+    const isProd = process.env.NODE_ENV === 'production' || process.env.USE_HTTPS === 'true'
+    res.cookie('session', sessionId, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'Lax'
+    })
     res.redirect(process.env.FRONTEND_ORIGIN)
   } catch (err) {
     console.error(err.response?.data || err)
