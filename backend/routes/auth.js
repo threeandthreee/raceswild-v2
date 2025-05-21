@@ -71,7 +71,7 @@ router.get('/auth', asyncRoute(async (req, res) => {
     res.cookie('session', sessionId, {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'Lax'
+      sameSite: 'none'
     })
     res.redirect(process.env.FRONTEND_ORIGIN)
   } catch (err) {
