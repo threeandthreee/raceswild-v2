@@ -47,7 +47,7 @@
   onMounted(() => {
     loading.value = true
     api.get('/games').then(response => {
-      games.value = response.data.filter(it => it.has_leaderboard)
+      games.value = response.data.filter(it => it.board_layout)
     }).finally(() => {
       loading.value = false
     })
