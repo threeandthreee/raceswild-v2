@@ -8,7 +8,7 @@ div(v-if="layout")
         .text-caption.mb-4(v-if="data.segments.find(it => it.id == layout).notes") {{data.segments.find(it => it.id == layout).notes}}
         .text-body-1(v-if="!data.segments.find(it => it.id == layout).segment_times.length") No times posted.
         .d-flex
-          .d-flex.align-center(v-for="(time, index) in data.segments.find(it => it.id == layout).segment_times")
+          .d-flex.align-center.mr-4(v-for="(time, index) in data.segments.find(it => it.id == layout).segment_times")
             | {{index+1}}.
             v-img.mx-2(:src="data.players[time.player_id].avatar_url" width=24 height=24)
             a(v-if="time.vod_url" :href="time.vod_url") {{formatSegmentTime(time.segment_time, data.segments.find(it => it.id == layout).timing_type)}}
