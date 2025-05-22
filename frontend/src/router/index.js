@@ -33,6 +33,11 @@ const routes = [
     component: () => import('../views/Leaderboard.vue'),
   },
   {
+    path: '/segment/:id',
+    name: 'Segment',
+    component: () => import('../views/Segment.vue'),
+  },
+  {
     path: '/players',
     name: 'Player Index',
     component: () => import('../views/PlayerIndex.vue'),

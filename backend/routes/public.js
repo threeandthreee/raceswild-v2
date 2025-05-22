@@ -227,23 +227,9 @@ router.get('/leaderboard/:id', asyncRoute(async (req, res) => {
     .whereIn('id', segmentIds)
 
   for (const segment of segments) {
-    // Get latest time per player for this segment
-    const times = await knex
-      .select('st.*')
-      .from('segment_times as st')
-      .join(
-        knex('segment_times')
-          .select('player_id')
-          .max('posted_dtm as latest')
-          .where('segment_id', segment.id)
-          .groupBy('player_id')
-          .as('latest_times'),
-        function () {
-          this.on('st.player_id', '=', 'latest_times.player_id')
-            .andOn('st.posted_dtm', '=', 'latest_times.latest')
-        }
-      )
-      .where('st.segment_id', segment.id)
+    // Get all times for this segment
+    const times = await knex('segment_times')
+      .where({ segment_id: segment.id })
 
     // Sort based on timing direction
     times.sort((a, b) => {
@@ -252,7 +238,28 @@ router.get('/leaderboard/:id', asyncRoute(async (req, res) => {
         : a.segment_time - b.segment_time
     })
 
-    segment.segment_times = times
+    // Keep only the best time per player
+    const seenPlayers = new Set()
+    const filtered = []
+    for (const time of times) {
+      if (!seenPlayers.has(time.player_id)) {
+        filtered.push(time)
+        seenPlayers.add(time.player_id)
+      }
+    }
+
+    // Assign position with proper tie handling
+    let position = 1
+    let actualRank = 1
+    for (let i = 0; i < filtered.length; i++) {
+      if (i > 0 && filtered[i].segment_time !== filtered[i - 1].segment_time) {
+        position = actualRank
+      }
+      filtered[i].position = position
+      actualRank++
+    }
+
+    segment.segment_times = filtered
   }
 
   const playerIds = new Set()

@@ -36,6 +36,36 @@ router.delete('/player', asyncRoute(async (req, res) => {
   })
 }))
 
+router.get('/segment-times/:segment_id', asyncRoute(async (req, res) => {
+  const playerId = req.session?.id
+  const segmentId = req.params.segment_id
+
+  if (!playerId) return res.status(401).json({ error: 'Unauthorized' })
+
+  // Get player's times for the segment
+  const times = await knex('segment_times')
+    .where({ player_id: playerId, segment_id: segmentId })
+    .orderBy('posted_dtm', 'desc')
+
+  // Get segment and game info
+  const segment = await knex('segments')
+    .leftJoin('games', 'segments.game_id', 'games.id')
+    .where('segments.id', segmentId)
+    .select(
+      'segments.*',
+      'games.title as game_title',
+      'games.slug as game_slug'
+    )
+    .first()
+
+  if (!segment) return res.status(404).json({ error: 'Segment not found' })
+
+  res.json({
+    segment,
+    times,
+  })
+}))
+
 // Post a new segment_time
 router.post('/segment-time', asyncRoute(async (req, res) => {
   const playerId = req.session.id

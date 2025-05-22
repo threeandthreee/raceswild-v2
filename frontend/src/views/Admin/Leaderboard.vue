@@ -143,11 +143,6 @@ div
           label="Slug"
           variant="outlined"
         )
-        v-textarea(
-          v-model="addGameData.board_layout"
-          label="Board Layout"
-          variant="outlined"
-        )
         v-btn(variant="outlined" @click="addGame") Add Game
 </template>
 
