@@ -4,7 +4,7 @@ v-container
     breadcrumbs(:items="breadcrumbItems" :loading="loading")
       login-status(:ready="!loading" :data="login")
   div(v-if="!loading")
-    div(v-if="game.has_leaderboard")
+    div(v-if="game.board_layout")
       .text-h3 {{game.title}}
       .mt-8(v-for="item in game.board_layout")
         leaderboard-segments(:layout="item" :data="data")
