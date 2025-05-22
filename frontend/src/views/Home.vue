@@ -60,17 +60,3 @@ onMounted(async () => {
   data.value.dateStr = `${date.format('dddd, MMM D @ hA')} (${date.fromNow()})`
 })
 </script>
-
-<style>
-.twitch-btn {
-  background-color: #9146FF; /* Twitch purple */
-}
-
-.youtube-btn {
-  background-color: #FF0000; /* YouTube red */
-}
-
-.discord-btn {
-  background-color: #5865F2; /* Discord blurple */
-}
-</style>

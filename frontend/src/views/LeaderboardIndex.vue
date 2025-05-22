@@ -17,9 +17,14 @@
           :headers="gamesHeaders"
           :search="search"
           :sort-by="[{key:'title'}]"
+          hide-headers
+          hide-footer
+          :items-per-page="-1"
         )
+          template(#headers)
+          template(#bottom)
           template(#item.title="{item}")
-            router-link(:to="`/leaderboard/${item.slug}`") {{item.title}}
+            v-btn(variant="text" color="primary" :to="`/leaderboard/${item.slug}`") {{item.title}}
   </template>
 
   <script setup>

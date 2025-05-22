@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+div(v-if="layout")
   div(v-if="!layout.type")
     v-divider
     v-card(variant="text")
@@ -14,24 +14,26 @@ div
             a(v-if="time.vod_url" :href="time.vod_url") {{formatSegmentTime(time.segment_time, data.segments.find(it => it.id == layout).timing_type)}}
             span(v-else) {{formatSegmentTime(time.segment_time, data.segments.find(it => it.id == layout).timing_type)}}
     v-divider
-  div(v-if="layout.type == 'segment_block'")
-    v-card(variant="text" @click="toggleCollapse")
+  div(v-if="layout.type=='segment_block' || layout.type=='blurb'")
+    v-card(variant="text" v-if="layout.title" @click="toggleCollapse")
       .text-h4.ma-2 {{layout.title}}
         v-icon(v-if="collapsed") mdi-chevron-up
         v-icon(v-else) mdi-chevron-down
-    div(v-if="!collapsed" v-for="segment in layout.segments")
-      leaderboard-segments.ml-4(:layout="segment" :data="data")
-  div(v-if="layout.type == 'blurb'")
-    .markdown.mb-2(v-html="marked(layout.contents)")
+    div(v-if="!collapsed")
+      div(v-if="layout.type == 'segment_block'" v-for="segment in layout.segments")
+        leaderboard-segments.ml-4(:layout="segment" :data="data")
+      div(v-if="layout.type == 'blurb'")
+        .markdown.mb-2(v-if="layout.content" v-html="marked(layout.content)")
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { marked } from 'marked'
 import { formatSegmentTime, formatTimestamp } from '@/utils/formatting'
 import LeaderboardSegments from '@/components/LeaderboardSegments.vue'
-import { ref } from 'vue'
-defineProps(['layout', 'data'])
+const props = defineProps(['layout', 'data'])
 
-const collapsed = ref(false)
+const collapsed = ref(props.layout.collapsed)
+
 const toggleCollapse = () => { collapsed.value = !collapsed.value }
 </script>

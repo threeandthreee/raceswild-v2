@@ -16,7 +16,7 @@ v-container
         :items="players"
         :headers="playerHeaders"
         :search="search"
-        :sort-by="[{key:'username'}]"
+        :sort-by="[{key:'participations', order:'desc'}]"
       )
         template(#item.username="{item}")
           router-link(:to="`/player/${item.username}`") {{item.username}}

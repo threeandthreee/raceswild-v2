@@ -24,10 +24,11 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use(async (req, res, next) => {
-  const sessionId = req.cookies?.session
-  if (!sessionId) return next()
+  const authHeader = req.get('Authorization')
+  if (!authHeader?.startsWith('Bearer ')) return next()
 
-  const player = await knex('players').where({ session_id: sessionId }).first()
+  req.sessionId = authHeader.split(' ')[1]
+  const player = await knex('players').where({ session_id: req.sessionId }).first()
   if (player) req.session = player
 
   next()

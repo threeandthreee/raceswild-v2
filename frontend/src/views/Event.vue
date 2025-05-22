@@ -6,7 +6,7 @@ v-container
     div(v-if="event.id")
       .text-h3.text-sm.h2 {{event.title}}
       .text-h5.text-sm.h4 {{dateStr}}
-      p todo vod, participants, details
+      p TODO: vod, participants, details
     div(v-else) not found
 </template>
 

@@ -39,13 +39,9 @@ router.get('/auth', asyncRoute(async (req, res) => {
     const user = userRes.data.data[0]
     const expiry = new Date(Date.now() + expires_in * 1000)
 
-    // Reuse existing session if valid
-    let sessionId = req.cookies?.session
-    const existing = sessionId && await knex('players')
-      .where({ id: user.id, session_id: sessionId })
-      .first()
+    const player = await knex('players').where({ id: user.id }).first()
 
-    if (!existing) sessionId = uuidv4()
+    let sessionId = player.session_id || uuidv4()
 
     await knex('players')
       .insert({
@@ -67,13 +63,7 @@ router.get('/auth', asyncRoute(async (req, res) => {
       .onConflict('player_id')
       .merge({ access_token, refresh_token, expires_at: expiry })
 
-    const isProd = process.env.NODE_ENV === 'production' || process.env.USE_HTTPS === 'true'
-    res.cookie('session', sessionId, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: 'none'
-    })
-    res.redirect(process.env.FRONTEND_ORIGIN)
+    res.redirect(`${process.env.FRONTEND_ORIGIN}?token=${sessionId}`)
   } catch (err) {
     console.error(err.response?.data || err)
     res.status(500).json({ error: 'OAuth failed' })
@@ -83,20 +73,18 @@ router.get('/auth', asyncRoute(async (req, res) => {
 
 // POST /logout
 router.post('/logout', asyncRoute(async (req, res) => {
-  const sessionId = req.cookies.session
-  if (!sessionId) return res.status(401).json({ error: 'No session' })
+  if (!req.sessionId) return res.status(401).json({ error: 'No session' })
 
-  await knex('players').where({ session_id: sessionId }).update({ session_id: null })
+  await knex('players').where({ session_id: req.sessionId }).update({ session_id: null })
   res.clearCookie('session')
   res.json({ success: true })
 }))
 
 router.get('/whoami', async (req, res) => {
-  const sessionId = req.cookies.session
-  if (!sessionId) return res.json({ loggedIn: false })
+  if (!req.sessionId) return res.json({ loggedIn: false })
 
   const [player] = await knex('players')
-    .where({ session_id: sessionId })
+    .where({ session_id: req.sessionId })
     .select('id', 'username', 'short', 'is_admin', 'avatar_url')
   if (!player) return res.json({ loggedIn: false })
 

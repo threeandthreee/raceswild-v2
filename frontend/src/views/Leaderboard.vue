@@ -55,14 +55,14 @@ import LeaderboardSegments from '@/components/LeaderboardSegments.vue'
 import LoginStatus from '@/components/LoginStatus.vue'
 import { useDisplay } from 'vuetify'
 
-const { smAndUp } = useDisplay()
+const { smAndDown } = useDisplay()
 const route = useRoute()
 const slug = route.params.slug
 
-const breadcrumbItems = [
-  { label: smAndUp ? "Leaderboard" : "LB", url: "/leaderboard" },
+const breadcrumbItems = computed(() => [
+  { label: smAndDown.value ? "LB" : "Leaderboard", url: "/leaderboard" },
   { label: slug }
-]
+])
 
 const loading = ref(true)
 const game = ref({})
@@ -83,8 +83,6 @@ const addSegmentSubmit = async () => {
   if (add.hours) time += add.hours * 3600
   if (add.minutes) time += add.minutes * 60
   if (add.seconds) time += +add.seconds
-  console.log(time)
-  console.log(type)
   if (type == 'centis') {
     time *= 100
     if (add.centis) time += +add.centis
@@ -92,11 +90,9 @@ const addSegmentSubmit = async () => {
     time *= 1000
     if (add.millis) time += +add.millis
   } else if (type == 'frames') {
-    console.log('frames')
     time *= 60
     if (add.frames) time += +add.frames
   }
-  console.log(time)
   await api.post('/segment-time', {
     segment_id: add.id,
     segment_time: time,
@@ -120,7 +116,6 @@ const confirmedDeletes = ref([])
 onMounted(async () => {
   try {
     await api.get('/whoami').then(response => {
-      console.log(response.data)
       login.value = response.data
     })
     await api.get(`/game/${slug}`).then(response => {

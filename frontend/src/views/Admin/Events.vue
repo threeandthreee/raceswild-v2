@@ -47,9 +47,10 @@ div
           label="Vod Url"
           variant="outlined"
         )
-        v-btn(variant="outlined" @click="editEvent") Edit
-        v-btn(variant="outlined" @click="deleteEvent") Delete
-        v-checkbox(label="Confirm Delete" hide-details v-model="editEventData.confirm")
+        .d-flex.align-center
+          v-btn.mr-4(variant="outlined" @click="editEvent") Edit
+          v-btn(variant="outlined" @click="deleteEvent") Delete
+          v-checkbox(label="Confirm Delete" hide-details v-model="editEventData.confirm")
     v-expansion-panel(v-if="selectedEvents.length")
       v-expansion-panel-title Participants
       v-expansion-panel-text
@@ -225,6 +226,7 @@ const deleteEvent = async() => {
   await api.delete(`/admin/events/${data.id}`)
   selectedEvents.value = []
   await getEvents()
+  panel.value = null
 }
 
 const generateUtcTimestamps = (dateString, timeString, durationHours) => {
@@ -308,7 +310,7 @@ const editParticipant = async () => {
   let data = editParticipantData.value
   let payload = {}
   payload.event_id = selectedEvents.value[0]
-  payload.player_id = selectedPlayers.value[0]
+  payload.player_id = data.player_id
   payload.participation_level = data.participation_level
   await api.put(`/admin/participations/${data.id}`, payload)
   selectedParticipants.value = []

@@ -3,11 +3,12 @@ div
   div(v-if="!ready")
     v-progress-circular(indeterminate color="primary")
   div(v-else)
-    v-btn(v-if="!data.loggedIn" :href="loginUrl") Login with Twitch
+    v-btn.twitch-btn(v-if="!data.loggedIn" :href="loginUrl") Login
+      v-icon.ml-2 mdi-twitch
     v-chip.pr-0(v-else)
-      v-img.ml-n2.mr-2(:src="data.player.avatar_url" width=24 height=24 style="border-radius:100%;")
-      span {{data.player.username}}
-      v-btn.ml-2(icon size="x-small" @click="logout")
+      v-img.ml-n2.mr-1(:src="data.player.avatar_url" width=24 height=24 style="border-radius:100%;")
+      span.d-none.d-sm-block.mx-1 {{data.player.username}}
+      v-btn.ml-1(icon size="x-small" @click="logout")
         v-icon(color="red") mdi-logout
 </template>
 

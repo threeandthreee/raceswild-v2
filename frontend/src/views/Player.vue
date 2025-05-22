@@ -5,11 +5,9 @@ v-container
       login-status(:ready="!loading" :data="login")
   div(v-if="!loading")
     div(v-if="player.username")
-      p short name:
-        v-chip.ma-2 {{player.short}}
       v-img(:src="player.avatar_url" width=300 height=300)
       p TODO: this page
-      div(v-if="login.player?.username == username")
+      div.d-none(v-if="login.player?.username == username")
         v-card(variant="outlined")
           v-card-title Change your short name
           v-card-text
@@ -52,7 +50,6 @@ const changeShort = async () => {
 
 onMounted(async () => {
   await api.get('/whoami').then(response => {
-    console.log(response.data)
     login.value = response.data
   })
   api.get(`/player/${username}`).then(response => {
