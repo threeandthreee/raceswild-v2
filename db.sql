@@ -30,7 +30,9 @@ CREATE TABLE IF NOT EXISTS participations (
 
 CREATE TABLE IF NOT EXISTS games (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    pre_title VARCHAR(100),
     title VARCHAR(100) NOT NULL,
+    post_title VARCHAR(100),
     slug VARCHAR(50) NOT NULL UNIQUE,
     has_leaderboard BOOLEAN NOT NULL DEFAULT FALSE,
     board_layout JSON,

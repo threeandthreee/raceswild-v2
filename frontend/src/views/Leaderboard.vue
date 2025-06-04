@@ -5,7 +5,9 @@ v-container
       login-status(:ready="!loading" :data="login")
   div(v-if="!loading")
     div(v-if="game.board_layout")
+      .text-overline.mt-n2(v-if="game.pre_title") {{game.pre_title}}
       .text-h3 {{game.title}}
+      .text-overline.mb-n2(v-if="game.post_title") {{game.post_title}}
       .mt-8(v-for="item in game.board_layout")
         leaderboard-segments(:layout="item" :data="data")
     div(v-else) not found

@@ -45,4 +45,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message || 'Internal Server Error' })
 })
 
+if (process.env.DISCORD_WEBHOOK_URL) {
+  const cron = require('node-cron')
+  const digestToDiscord = require('./utils/digestToDiscord')
+  cron.schedule('0 * * * *', digestToDiscord)
+}
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))

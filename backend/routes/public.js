@@ -1,6 +1,7 @@
 const express = require('express')
 const knex = require('../db/knex')
 const asyncRoute = require('../utils/asyncRoute')
+const digest = require('../utils/digest')
 const dayjs = require('dayjs')
 
 const router = express.Router()
@@ -36,7 +37,7 @@ router.get('/players', asyncRoute(async (req, res) => {
 }))
 
 router.get('/games', asyncRoute(async (req, res) => {
-  const games = await knex('games').select('id', 'title', 'slug', 'has_leaderboard', 'board_layout')
+  const games = await knex('games').select('id', 'pre_title', 'title', 'post_title', 'slug', 'has_leaderboard', 'board_layout')
   res.json(games)
 }))
 
@@ -159,7 +160,7 @@ router.get('/player/:username', asyncRoute(async (req, res) => {
 
 router.get('/game/:slug', asyncRoute(async (req, res) => {
   const { slug } = req.params
-  const [game] = await knex('games').where({ slug }).select('id', 'title', 'slug', 'has_leaderboard', 'board_layout')
+  const [game] = await knex('games').where({ slug }).select('id', 'pre_title', 'title', 'post_title', 'slug', 'has_leaderboard', 'board_layout')
   if (!game) return res.status(404).json({ error: 'Game not found' })
   res.json(game)
 }))
@@ -288,5 +289,8 @@ router.get('/leaderboard/:id', asyncRoute(async (req, res) => {
   res.json(boardCache)
 }))
 
+router.get('/leaderboard-digest', asyncRoute(async (req, res) => {
+  res.json(await digest(req.query.cutoff))
+}))
 
 module.exports = router
