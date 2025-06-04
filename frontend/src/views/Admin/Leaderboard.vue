@@ -22,8 +22,18 @@ div
       v-expansion-panel-title Edit Game
       v-expansion-panel-text
         v-text-field(
+          v-model="editGameData.pre_title"
+          label="Pre-Title"
+          variant="outlined"
+        )
+        v-text-field(
           v-model="editGameData.title"
           label="Title"
+          variant="outlined"
+        )
+        v-text-field(
+          v-model="editGameData.post_title"
+          label="Post-Title"
           variant="outlined"
         )
         v-text-field(
@@ -134,8 +144,18 @@ div
       v-expansion-panel-title Add Game
       v-expansion-panel-text
         v-text-field(
+          v-model="addGameData.pre_title"
+          label="Pre-Title"
+          variant="outlined"
+        )
+        v-text-field(
           v-model="addGameData.title"
           label="Title"
+          variant="outlined"
+        )
+        v-text-field(
+          v-model="addGameData.post_title"
+          label="Post-Title"
           variant="outlined"
         )
         v-text-field(
@@ -180,7 +200,9 @@ const selectedGames = ref([])
 const addGame = async () => {
   let data = addGameData.value
   let payload = {}
+  if (data.pre_title) payload.pre_title = data.pre_title
   if (data.title) payload.title = data.title
+  if (data.post_title) payload.post_title = data.post_title
   if (data.slug) payload.slug = data.slug
   if (data.board_layout) payload.board_layout = JSON.stringify(JSON.parse(data.board_layout))
   await api.post('/admin/games', payload)
@@ -196,7 +218,9 @@ const selectGame = async val => {
     let segments = (await api.get(`/segments/${game.id}`)).data
     editGameData.value = {
       id: game.id,
+      pre_title: game.pre_title,
       title: game.title,
+      post_title: game.post_title,
       slug: game.slug,
       board_layout: JSON.stringify(game.board_layout, null, 2),
       segments
@@ -207,7 +231,9 @@ const editGame = async () => {
   let data = editGameData.value
   let payload = {}
   payload.board_cache = null
+  if (data.pre_title) payload.pre_title = data.pre_title
   if (data.title) payload.title = data.title
+  if (data.post_title) payload.post_title = data.post_title
   if (data.slug) payload.slug = data.slug
   if (data.board_layout) payload.board_layout = JSON.stringify(JSON.parse(data.board_layout))
   await api.put(`/admin/games/${data.id}`, payload)
