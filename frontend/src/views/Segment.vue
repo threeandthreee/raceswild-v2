@@ -12,19 +12,20 @@ v-container
       .text-caption(v-if="data.segment.notes") {{data.segment.notes}}
       .mb-4
       v-card
-        v-card-title Submit a time
+        v-card-title Submit a {{data.segment.timing_type != 'count' ? 'time' : 'score'}}
         v-card-text
           v-form.d-flex(ref="addSegmentForm")
-            v-text-field(label="Hours" variant="outlined" v-model="addSegmentData.hours" type="number" :rules="[onlyInts, minZero]")
-            v-text-field(label="Minutes" variant="outlined" v-model="addSegmentData.minutes" type="number" :rules="[onlyInts, minZero, max59]")
-            v-text-field(label="Seconds" variant="outlined" v-model="addSegmentData.seconds" type="number" :rules="[onlyInts, minZero, max59]")
+            v-text-field(label="Hours" variant="outlined" v-model="addSegmentData.hours" type="number" :rules="[onlyInts, minZero]" v-if="data.segment.timing_type != 'count'")
+            v-text-field(label="Minutes" variant="outlined" v-model="addSegmentData.minutes" type="number" :rules="[onlyInts, minZero, max59]" v-if="data.segment.timing_type != 'count'")
+            v-text-field(label="Seconds" variant="outlined" v-model="addSegmentData.seconds" type="number" :rules="[onlyInts, minZero, max59]" v-if="data.segment.timing_type != 'count'")
             v-text-field(label="Hundredths" variant="outlined" v-model="addSegmentData.centis" type="number" :rules="[onlyInts, minZero, max99]" v-if="data.segment.timing_type == 'centis'")
             v-text-field(label="Thousandths" variant="outlined" v-model="addSegmentData.millis" type="number" :rules="[onlyInts, minZero, max999]" v-if="data.segment.timing_type == 'millis'")
             v-text-field(label="Frames" variant="outlined" v-model="addSegmentData.frames" type="number" :rules="[onlyInts, minZero, max59]" v-if="data.segment.timing_type == 'frames'")
+            v-text-field(label="Score" variant="outlined" v-model="addSegmentData.seconds" type="number" :rules="[onlyInts, minZero]" v-if="data.segment.timing_type == 'count'")
           v-text-field(label="Vod Url" variant="outlined" v-model="addSegmentData.vod_url")
           v-btn(variant="outlined" @click="addSegmentSubmit") Submit
           v-divider.my-4
-          .text-h6 Your submitted times
+          .text-h6 Your submitted {{data.segment.timing_type != 'count' ? 'time' : 'score'}}s
           .text-caption (you can't edit, delete and resubmit if you must)
           .d-flex.align-center(v-for="time in data.times")
             span.mx-2 {{ formatSegmentTime(time.segment_time, data.segment.timing_type) }}

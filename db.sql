@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS segments (
     notes TEXT,
     game_id INT UNSIGNED NOT NULL,
     is_full_run BOOLEAN NOT NULL DEFAULT FALSE,
-    timing_type ENUM('millis', 'centis', 'seconds', 'frames') NOT NULL DEFAULT 'millis',
+    timing_type ENUM('millis', 'centis', 'seconds', 'frames', 'count') NOT NULL DEFAULT 'millis',
     timing_inverted BOOLEAN NOT NULL DEFAULT FALSE,
 
     FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE

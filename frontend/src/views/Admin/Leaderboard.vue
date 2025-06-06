@@ -257,7 +257,7 @@ const segmentsHeaders = [
   { title: "Timing", value: "timing_type", sortable: true },
   { title: "Inverted Timing?", value: "timing_inverted", sortable: true }
 ]
-const timingOptions = ['millis', 'centis', 'seconds', 'frames']
+const timingOptions = ['millis', 'centis', 'seconds', 'frames', 'count']
 const addSegmentData = ref({})
 const editSegmentData = ref({})
 const selectedSegments = ref([])
