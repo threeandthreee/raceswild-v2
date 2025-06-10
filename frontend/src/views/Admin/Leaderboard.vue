@@ -15,6 +15,7 @@ div
     v-model="selectedGames"
     show-select
     @update:model-value="selectGame"
+    :sort-by="[{key:'title', order:'asc'}]"
   )
     template(#item.board_layout="{ item }") {{ item.board_layout ? '✅' : '⬜️' }}
   v-expansion-panels(v-model="panel")

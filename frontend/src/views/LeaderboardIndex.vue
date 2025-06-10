@@ -24,7 +24,7 @@
           template(#headers)
           template(#bottom)
           template(#item.title="{item}")
-            v-btn(variant="text" color="primary" :to="`/leaderboard/${item.slug}`") {{item.title}}
+            v-btn.ml-n4(variant="text" color="primary" :to="`/leaderboard/${item.slug}`") {{item.title}}
   </template>
 
   <script setup>

@@ -135,7 +135,14 @@ router.get('/player/:username', asyncRoute(async (req, res) => {
   player.participations = participations
 
   const runsRaw = await knex
-    .select('st.*', 's.label', 'g.title as game_title', 'g.slug as game_slug')
+    .select(
+      'st.*',
+      's.label',
+      's.timing_type',
+      's.timing_inverted',
+      'g.title as game_title',
+      'g.slug as game_slug'
+    )
     .from('segment_times as st')
     .join('segments as s', 'st.segment_id', 's.id')
     .join('games as g', 's.game_id', 'g.id')
