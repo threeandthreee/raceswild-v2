@@ -10,7 +10,7 @@ v-container
         v-btn.twitch-btn.flex-grow-0(dark depressed :href="`https://twitch.tv/${player.username}`")
           | twitch.tv/{{player.username}}
         v-spacer.flex-grow-1
-      div(v-if="personalBests.length")
+      div(v-if="Object.keys(personalBests).length")
         v-divider.my-4
         .text-h4 Personal Bests
         v-card.my-2(v-for="(runs, title) in personalBests" variant="text")
