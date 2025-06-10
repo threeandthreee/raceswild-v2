@@ -10,16 +10,17 @@ v-container
         v-btn.twitch-btn.flex-grow-0(dark depressed :href="`https://twitch.tv/${player.username}`")
           | twitch.tv/{{player.username}}
         v-spacer.flex-grow-1
-      v-divider.my-4
-      .text-h4 Personal Bests
-      v-card.my-2(v-for="(runs, title) in personalBests" variant="text")
-        v-card-title
-          v-btn.ml-n4(variant="text" color="primary" :to="`/leaderboard/${runs[0].game_slug}`") {{title}}
-        v-card-text.ml-4
-          div(v-for="run in runs")
-            .text-body-1 {{run.label}} -&nbsp;
-              a(v-if="run.vod_url" :href="run.vod_url") {{formatSegmentTime(run.segment_time, run.timing_type)}}
-              span(v-else) {{formatSegmentTime(run.segment_time, run.timing_type)}}
+      div(v-if="personalBests.length")
+        v-divider.my-4
+        .text-h4 Personal Bests
+        v-card.my-2(v-for="(runs, title) in personalBests" variant="text")
+          v-card-title
+            v-btn.ml-n4(variant="text" color="primary" :to="`/leaderboard/${runs[0].game_slug}`") {{title}}
+          v-card-text.ml-4
+            div(v-for="run in runs")
+              .text-body-1 {{run.label}} -&nbsp;
+                a(v-if="run.vod_url" :href="run.vod_url") {{formatSegmentTime(run.segment_time, run.timing_type)}}
+                span(v-else) {{formatSegmentTime(run.segment_time, run.timing_type)}}
     div(v-else) not found
 </template>
 
