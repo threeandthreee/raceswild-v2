@@ -78,7 +78,7 @@ const processData = (input, context) => {
         if (!(time.player_id in acc))
           acc[time.player_id] = {
             player_id: time.player_id,
-            segment_time: 0,
+            segment_time: input.base_time || 0,
             segment_count: 0
           }
         acc[time.player_id].segment_time += convTime(time.segment_time, segment_data.timing_type, input.timing_type)
