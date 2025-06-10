@@ -5,15 +5,21 @@ v-container
       login-status(:ready="!loading" :data="login")
   div(v-if="!loading")
     div(v-if="player.username")
-      v-img(:src="player.avatar_url" width=300 height=300)
-      p TODO: this page
-      div.d-none(v-if="login.player?.username == username")
-        v-card(variant="outlined")
-          v-card-title Change your short name
-          v-card-text
-            .d-flex.align-center.ma-2
-              v-text-field.mr-2(variant="outlined" v-model="newData.short" label="New Short" hide-details density="compact")
-              v-btn(@click="changeShort" variant="outlined") Change
+      .d-flex.align-center
+        v-img.flex-grow-0.mr-4(:src="player.avatar_url" width=50 height=50 style="border-radius:3px")
+        v-btn.twitch-btn.flex-grow-0(dark depressed :href="`https://twitch.tv/${player.username}`")
+          | twitch.tv/{{player.username}}
+        v-spacer.flex-grow-1
+      v-divider.my-4
+      .text-h4 Personal Bests
+      v-card.my-2(v-for="(runs, title) in personalBests" variant="text")
+        v-card-title
+          v-btn.ml-n4(variant="text" color="primary" :to="`/leaderboard/${runs[0].game_slug}`") {{title}}
+        v-card-text.ml-4
+          div(v-for="run in runs")
+            .text-body-1 {{run.label}} -&nbsp;
+              a(v-if="run.vod_url" :href="run.vod_url") {{formatSegmentTime(run.segment_time, run.timing_type)}}
+              span(v-else) {{formatSegmentTime(run.segment_time, run.timing_type)}}
     div(v-else) not found
 </template>
 
@@ -21,6 +27,7 @@ v-container
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/utils/axios'
+import { formatSegmentTime } from '@/utils/formatting'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import LoginStatus from '@/components/LoginStatus.vue'
 
@@ -36,17 +43,7 @@ const loading = ref(true)
 const player = ref({})
 const login = ref({})
 const newData = ref({})
-
-const changeShort = async () => {
-  await api.post('/player/short', { short: newData.value.short })
-  newData.value = {}
-  loading.value = true
-  api.get(`/player/${username}`).then(response => {
-    player.value = response.data
-  }).finally(() => {
-    loading.value = false
-  })
-}
+const personalBests = ref({})
 
 onMounted(async () => {
   await api.get('/whoami').then(response => {
@@ -54,6 +51,11 @@ onMounted(async () => {
   })
   api.get(`/player/${username}`).then(response => {
     player.value = response.data
+    response.data.runs.forEach(run => {
+      if (!(run.game_title in personalBests.value))
+        personalBests.value[run.game_title] = []
+      personalBests.value[run.game_title].push(run)
+    })
   }).finally(() => {
     loading.value = false
   })
