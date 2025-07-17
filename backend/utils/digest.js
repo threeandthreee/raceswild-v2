@@ -64,8 +64,12 @@ module.exports = async function digest(providedTimestamp = null) {
       const currentBest = await getBestTimesPerPlayer(entry.segment_id, entry.timing_inverted);
 
       // Compute current placement
-      const placement =
-        currentBest.findIndex((r) => r.player_id === entry.player_id) + 1;
+      let placement = currentBest.findIndex((r) => r.player_id === entry.player_id) + 1;
+      let tied = false
+      while (placement > 1 && currentBest[placement-2].segment_time == entry.segment_time) {
+        placement--
+        tied = true
+      }
 
       // Previous best times (before cutoff)
       const previousBest = await getBestTimesPerPlayer(entry.segment_id, entry.timing_inverted, cutoffRaw);
@@ -76,6 +80,7 @@ module.exports = async function digest(providedTimestamp = null) {
         ...entry,
         placement,
         previousPlacement,
+        tied,
       };
     })
   );

@@ -50,16 +50,27 @@ module.exports = async function digestToDiscord() {
 
     const lines = times.map(t => {
       let p = players[t.player_id]
-      let blurb = (t.placement != t.previousPlacement)
-        ? `**${p.username}** took **${ordinal(t.placement)}** place`
-        : `**${p.username}** improved their **${ordinal(t.placement)}** place time`
+      let blurb = `**${p.username}**`
+      if (t.tied)
+        blurb += " tied"
+      else if (t.placement != t.previousPlacement)
+        blurb += " took"
+      else
+        blurb += " improved"
+      blurb += ` **${ordinal(t.placement)}** place`
       blurb += ` on **${t.segment_label}** in *${t.game_title}*`
       blurb += ` with a **${formatSegmentTime(t.segment_time, t.timing_type)}**`
       return blurb
     })
 
-    const content = `New times posted in the past hour:\n- ${lines.slice(0, 20).join('\n- ')}`
-
-    await axios.post(process.env.DISCORD_WEBHOOK_URL, { content })
+    let cursor = 0
+    const SIZE = 40
+    while (lines.length > cursor) {
+      let content = cursor ? '- ' : 'New times posted in the past hour:\n- '
+      content += lines.slice(cursor, cursor + SIZE).join('\n- ')
+      await axios.post(process.env.DISCORD_WEBHOOK_URL, { content })
+      cursor += SIZE
+      await new Promise(resolve => setTimeout(resolve, 1000))
+    }
   } catch(err) { console.log(err) }
 }
