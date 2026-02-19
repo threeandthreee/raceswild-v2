@@ -73,7 +73,7 @@ router.get('/calendar', async (req, res) => {
         description: event.details || '',
         start: [start.getFullYear(), start.getMonth() + 1, start.getDate(), start.getHours(), start.getMinutes()],
         end: [end.getFullYear(), end.getMonth() + 1, end.getDate(), end.getHours(), end.getMinutes()],
-        url: 'https://raceswild.3and3.us'
+        url: 'https://raceswild.3and3.dev'
       }
     })
   )
